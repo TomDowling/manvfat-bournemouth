@@ -38,7 +38,7 @@ export default function FixturePage() {
                     <div className="flex justify-between items-center py-6">
                         <div className="flex items-center space-x-3">
                             <Trophy className="h-8 w-8 text-green-600" />
-                            <h1 className="text-2xl font-bold text-gray-900">Football League Manager</h1>
+                            <h1 className="text-2xl font-bold text-gray-900">ManVFat Bournemouth</h1>
                         </div>
                         <nav className="flex space-x-6">
                             <Link href="/" className="text-gray-600 hover:text-green-600">

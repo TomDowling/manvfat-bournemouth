@@ -10,19 +10,26 @@ import { Trophy, Search, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { teams, players } from "@/lib/data";
 
+const teamColorMap: { [key: string]: string } = {
+    yellow: "bg-yellow-300",
+    purple: "bg-purple-600",
+    black: "bg-black",
+    orange: "bg-orange-500",
+    green: "bg-green-600",
+    white: "bg-gray-50 border border-gray-200",
+    blue: "bg-blue-600",
+    red: "bg-red-100"
+};
+
 export default function PlayersPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedTeam, setSelectedTeam] = useState("all");
-    const [selectedPosition, setSelectedPosition] = useState("all");
 
     const filteredPlayers = players.filter((player) => {
         const matchesSearch = player.name.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesTeam = selectedTeam === "all" || player.teamId === selectedTeam;
-        const matchesPosition = selectedPosition === "all" || player.position === selectedPosition;
-        return matchesSearch && matchesTeam && matchesPosition;
+        return matchesSearch && matchesTeam;
     });
-
-    const positions = [...new Set(players.map((p) => p.position))];
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
@@ -31,7 +38,7 @@ export default function PlayersPage() {
                     <div className="flex justify-between items-center py-6">
                         <div className="flex items-center space-x-3">
                             <Trophy className="h-8 w-8 text-green-600" />
-                            <h1 className="text-2xl font-bold text-gray-900">Football League Manager</h1>
+                            <h1 className="text-2xl font-bold text-gray-900">ManVFat Bournemouth</h1>
                         </div>
                         <nav className="flex space-x-6">
                             <Link href="/" className="text-gray-600 hover:text-green-600">
@@ -79,36 +86,24 @@ export default function PlayersPage() {
                             ))}
                         </SelectContent>
                     </Select>
-                    <Select value={selectedPosition} onValueChange={setSelectedPosition}>
-                        <SelectTrigger className="w-full sm:w-48">
-                            <SelectValue placeholder="Filter by position" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All Positions</SelectItem>
-                            {positions.map((position) => (
-                                <SelectItem key={position} value={position}>
-                                    {position}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {filteredPlayers.map((player) => {
                         const team = teams.find((t) => t.id === player.teamId);
+                        const teamColorClasses = team ? teamColorMap[team.color.toLowerCase()] || "" : "";
                         return (
-                            <Card key={player.id} className="hover:shadow-lg transition-shadow">
+                            <Card key={player.id} className="relative hover:shadow-lg transition-shadow overflow-hidden">
+                                <div
+                                    className={`absolute transform rotate-45 ${teamColorClasses} text-center text-white font-semibold py-1 h-8 right-[-35px] top-[32px] w-[170px]`}></div>
+
                                 <CardHeader className="pb-3">
                                     <CardTitle className="text-lg">{player.name}</CardTitle>
-                                    <CardDescription>#{player.number}</CardDescription>
+                                    {player.isCaptain && <CardDescription>Captain</CardDescription>}
+                                    {player.isViceCaptain && <CardDescription>Vice Captain</CardDescription>}
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-2">
-                                        <div className="flex justify-between items-center">
-                                            <Badge variant="outline">{player.position}</Badge>
-                                            <span className="text-sm text-gray-600">Age {player.age}</span>
-                                        </div>
                                         <div className="text-sm">
                                             <span className="font-medium">{team?.name}</span>
                                         </div>

@@ -99,7 +99,7 @@ export default function FixturePage() {
                     <div className="flex justify-between items-center py-6">
                         <div className="flex items-center space-x-3">
                             <Trophy className="h-8 w-8 text-green-600" />
-                            <h1 className="text-2xl font-bold text-gray-900">Football League Manager</h1>
+                            <h1 className="text-2xl font-bold text-gray-900">ManVFat Bournemouth</h1>
                         </div>
                     </div>
                 </div>
@@ -110,7 +110,7 @@ export default function FixturePage() {
                     <div>
                         <h2 className="text-3xl font-bold text-gray-900">Match Details</h2>
                         <p className="text-gray-600">
-                            {fixture.matchday} - {fixture.date}
+                            {fixture.gameweek} - {fixture.date}
                         </p>
                     </div>
                 </div>
