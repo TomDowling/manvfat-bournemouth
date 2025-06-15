@@ -5,10 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, Trophy, Users, Plus } from "lucide-react";
 import Link from "next/link";
-import { fixtures, teams } from "@/lib/data";
+import { fixtures, teams, gameEvents, fixtureGoals } from "@/lib/data";
 import { format } from "date-fns";
 
-export default function HomePage() {
+export default function Page() {
     const now = new Date();
     const upcomingFixtures = fixtures.filter((f) => new Date(f.date) > now);
     const completedFixtures = fixtures.filter((f) => new Date(f.date) <= now);
@@ -51,14 +51,14 @@ export default function HomePage() {
                                         <div className="flex items-center justify-between mb-4">
                                             <div className="text-center">
                                                 <div className="font-semibold text-lg">
-                                                    {teams.find((t) => t.id === fixture.homeTeam)?.name}
+                                                    {teams.find((t) => t.id === fixture.homeTeamId)?.name}
                                                 </div>
                                                 <div className="text-sm text-gray-500">Home</div>
                                             </div>
                                             <div className="text-2xl font-bold text-gray-400">VS</div>
                                             <div className="text-center">
                                                 <div className="font-semibold text-lg">
-                                                    {teams.find((t) => t.id === fixture.awayTeam)?.name}
+                                                    {teams.find((t) => t.id === fixture.awayTeamId)?.name}
                                                 </div>
                                                 <div className="text-sm text-gray-500">Away</div>
                                             </div>
@@ -80,108 +80,52 @@ export default function HomePage() {
 
                     <TabsContent value="completed" className="space-y-4">
                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                            {completedFixtures.map((fixture) => (
-                                <Card key={fixture.id} className="hover:shadow-lg transition-shadow">
-                                    <CardHeader className="pb-3">
-                                        <div className="flex justify-between items-start">
-                                            <Badge variant="outline" className="text-xs">
-                                                Gameweek {fixture.gameweek}
-                                            </Badge>
-                                            <Badge variant="secondary" className="text-xs">
-                                                {format(fixture.date, "dd MMM yyyy @ HH:mm")}
-                                            </Badge>
-                                        </div>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="flex items-center justify-between mb-4">
-                                            <div className="text-center">
-                                                <div className="font-semibold text-lg">
-                                                    {teams.find((t) => t.id === fixture.homeTeam)?.name}
+                            {completedFixtures
+                                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                                // .filter((fixture) => fixture.id === "f29")
+                                .map((fixture) => {
+                                    const fixtureEvents = fixtureGoals(fixture);
+
+                                    return (
+                                        <Card key={fixture.id} className="hover:shadow-lg transition-shadow">
+                                            <CardHeader className="pb-3">
+                                                <div className="flex justify-between items-start">
+                                                    <Badge variant="outline" className="text-xs">
+                                                        Gameweek {fixture.gameweek}
+                                                    </Badge>
+                                                    <Badge variant="secondary" className="text-xs">
+                                                        {format(fixture.date, "dd MMM")} {/* Removed @ HH:mm as it's not in your data */}
+                                                    </Badge>
                                                 </div>
-                                                <div className="text-3xl font-bold text-green-600">
-                                                    {
-                                                        fixture.goals?.filter(
-                                                            (g) => g.team === teams.find((t) => t.id === fixture.homeTeam)?.id
-                                                        ).length
-                                                    }
+                                            </CardHeader>
+                                            <CardContent>
+                                                <div className="flex items-center justify-between mb-4">
+                                                    <div className="text-center">
+                                                        <div className="font-semibold text-lg">
+                                                            {teams.find((t) => t.id === fixture.homeTeamId)?.name}
+                                                        </div>
+                                                        <div className="text-3xl font-bold text-green-600">{fixtureEvents.home.goals}</div>
+                                                    </div>
+                                                    <div className="text-lg font-bold text-gray-400">-</div>
+                                                    <div className="text-center">
+                                                        <div className="font-semibold text-lg">
+                                                            {teams.find((t) => t.id === fixture.awayTeamId)?.name}
+                                                        </div>
+                                                        <div className="text-3xl font-bold text-green-600">{fixtureEvents.away.goals}</div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className="text-lg font-bold text-gray-400">-</div>
-                                            <div className="text-center">
-                                                <div className="font-semibold text-lg">
-                                                    {teams.find((t) => t.id === fixture.awayTeam)?.name}
-                                                </div>
-                                                <div className="text-3xl font-bold text-green-600">
-                                                    {
-                                                        fixture.goals?.filter(
-                                                            (g) => g.team === teams.find((t) => t.id === fixture.awayTeam)?.id
-                                                        ).length
-                                                    }
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <Link href={`/fixture/${fixture.id}`}>
-                                            <Button className="w-full" variant="outline" size="sm">
-                                                View Details
-                                            </Button>
-                                        </Link>
-                                    </CardContent>
-                                </Card>
-                            ))}
+                                                <Link href={`/fixture/${fixture.id}`}>
+                                                    <Button className="w-full" variant="outline" size="sm">
+                                                        View Details
+                                                    </Button>
+                                                </Link>
+                                            </CardContent>
+                                        </Card>
+                                    );
+                                })}
                         </div>
                     </TabsContent>
                 </Tabs>
-
-                {/* <div className="mt-12 grid gap-6 md:grid-cols-3">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <Users className="h-5 w-5" />
-                                Teams
-                            </CardTitle>
-                            <CardDescription>Manage league teams</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">{teams.length}</div>
-                            <p className="text-sm text-gray-600">Active teams</p>
-                            <Link href="/teams">
-                                <Button className="w-full mt-4" variant="outline">
-                                    View Teams
-                                </Button>
-                            </Link>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <Calendar className="h-5 w-5" />
-                                Fixtures
-                            </CardTitle>
-                            <CardDescription>Total fixtures this season</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">{fixtures.length}</div>
-                            <p className="text-sm text-gray-600">
-                                {completedFixtures.length} completed, {upcomingFixtures.length} remaining
-                            </p>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <Trophy className="h-5 w-5" />
-                                Season Progress
-                            </CardTitle>
-                            <CardDescription>League completion</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">{Math.round((completedFixtures.length / fixtures.length) * 100)}%</div>
-                            <p className="text-sm text-gray-600">Matches completed</p>
-                        </CardContent>
-                    </Card>
-                </div> */}
             </main>
         </div>
     );
