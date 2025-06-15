@@ -9,27 +9,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Trophy, Search, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { teams, players, playerStats } from "@/lib/data";
-
-const teamColorMap: { [key: string]: string } = {
-    yellow: "bg-yellow-300",
-    purple: "bg-purple-600",
-    black: "bg-black",
-    orange: "bg-orange-500",
-    green: "bg-green-600",
-    white: "bg-gray-50 border border-gray-200",
-    blue: "bg-blue-600",
-    red: "bg-red-100"
-};
+import { teamColorMap } from "@/lib/teamColorMap";
 
 export default function PlayersPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedTeam, setSelectedTeam] = useState("all");
 
-    const filteredPlayers = players.filter((player) => {
-        const matchesSearch = player.name.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesTeam = selectedTeam === "all" || player.teamId === selectedTeam;
-        return matchesSearch && matchesTeam;
-    });
+    const filteredPlayers = players
+        .filter((player) => player.isActive)
+        .filter((player) => {
+            const matchesSearch = player.name.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesTeam = selectedTeam === "all" || player.teamId === selectedTeam;
+            return matchesSearch && matchesTeam;
+        })
+        .sort((a, b) => a.name.localeCompare(b.name));
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
@@ -73,12 +66,13 @@ export default function PlayersPage() {
                         return (
                             <Card key={player.id} className="relative hover:shadow-lg transition-shadow overflow-hidden">
                                 <div
-                                    className={`absolute transform rotate-45 ${teamColorClasses} text-center text-white font-semibold py-1 h-8 right-[-35px] top-[32px] w-[170px]`}></div>
+                                    className={`absolute transform rotate-45 ${teamColorClasses} text-center text-white font-semibold py-1 h-8 right-[-35px] top-[32px] w-[170px]`}>
+                                    {player.isCaptain && <>Captain</>}
+                                    {player.isViceCaptain && <>Vice</>}
+                                </div>
 
                                 <CardHeader className="pb-3">
                                     <CardTitle className="text-lg">{player.name}</CardTitle>
-                                    {player.isCaptain && <CardDescription>Captain</CardDescription>}
-                                    {player.isViceCaptain && <CardDescription>Vice Captain</CardDescription>}
                                 </CardHeader>
                                 <CardContent>
                                     <div className="flex flex-col gap-2 text-sm">
