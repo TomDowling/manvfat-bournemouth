@@ -10,6 +10,7 @@ import { Trophy, Search, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { teams, players, playerStats } from "@/lib/data";
 import { teamColorMap } from "@/lib/teamColorMap";
+import { PlayerCard } from "@/components/PlayerCard";
 
 export default function PlayersPage() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -60,30 +61,9 @@ export default function PlayersPage() {
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {filteredPlayers.map((player) => {
-                        const team = teams.find((t) => t.id === player.teamId);
-                        const teamColorClasses = team ? teamColorMap[team.color.toLowerCase()] || "" : "";
-                        return (
-                            <Card key={player.id} className="relative hover:shadow-lg transition-shadow overflow-hidden">
-                                <div
-                                    className={`absolute transform rotate-45 ${teamColorClasses} text-center text-white font-semibold py-1 h-8 right-[-35px] top-[32px] w-[170px]`}>
-                                    {player.isCaptain && <>Captain</>}
-                                    {player.isViceCaptain && <>Vice</>}
-                                </div>
-
-                                <CardHeader className="pb-3">
-                                    <CardTitle className="text-lg">{player.name}</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="flex flex-col gap-2 text-sm">
-                                        <span className="font-medium">{team?.name}</span>
-                                        <span className="font-medium">Goals: {playerStats(player.id)?.goals ?? ""}</span>
-                                        <span className="font-medium">Assists: {playerStats(player.id)?.assists ?? ""}</span>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        );
-                    })}
+                    {filteredPlayers.map((player) => (
+                        <PlayerCard key={player.id} id={player.id} />
+                    ))}
                 </div>
 
                 {filteredPlayers.length === 0 && (

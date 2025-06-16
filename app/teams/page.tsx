@@ -20,7 +20,7 @@ export default function TeamsPage() {
 
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {teams.map((team) => {
-                        const teamPlayers = players.filter((p) => p.teamId === team.id);
+                        const teamPlayers = players.filter((player) => player.isActive).filter((p) => p.teamId === team.id);
                         return (
                             <Card key={team.id} className="hover:shadow-lg transition-shadow">
                                 <CardHeader>
@@ -37,7 +37,7 @@ export default function TeamsPage() {
 
                                         <Link href={`/teams/${team.id}`}>
                                             <Button className="w-full mt-5" variant="outline">
-                                                View Full Squad
+                                                View Team
                                             </Button>
                                         </Link>
                                     </div>

@@ -10,7 +10,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Trophy, ArrowLeft, Plus, Trash2, Target, Users } from "lucide-react";
 import Link from "next/link";
-import { fixtures, teams, players } from "@/lib/data";
+import { fixtures, teams, players, playerStats } from "@/lib/data";
+import { teamColorMap } from "@/lib/teamColorMap";
+import { PlayerCard } from "@/components/PlayerCard";
 
 interface Goal {
     id: string;
@@ -25,7 +27,7 @@ export default function FixturePage() {
     const router = useRouter();
     const id = params.id as string;
     const item = teams.find((f) => f.id === id);
-    const teamPlayers = players.filter((p) => p.teamId === id);
+    const teamPlayers = players.filter((player) => player.isActive).filter((p) => p.teamId === id);
 
     if (!item) {
         return <div>Team not found</div>;
@@ -43,22 +45,25 @@ export default function FixturePage() {
                         </div>
                     </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {teamPlayers.map((player) => (
-                        <Card key={player.id} className="hover:shadow-lg transition-shadow">
-                            <CardHeader>
-                                <div className="flex items-center justify-between">
-                                    <CardTitle className="text-xl">{player.name}</CardTitle>
-                                </div>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="space-y-2">
-                                    <p className="text-sm text-gray-600">Goals: 0</p>
-                                    <p className="text-sm text-gray-600">Assists: 0</p>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))}
+
+                <div className="flex flex-col gap-10">
+                    <div className="flex flex-col gap-4">
+                        <div className="text-xl">Players</div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {teamPlayers
+                                .slice()
+                                .sort((a, b) => {
+                                    if (a.isCaptain) return -1;
+                                    if (b.isCaptain) return 1;
+                                    if (a.isViceCaptain) return -1;
+                                    if (b.isViceCaptain) return 1;
+                                    return a.name.localeCompare(b.name);
+                                })
+                                .map((player) => (
+                                    <PlayerCard id={player.id} />
+                                ))}
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>
