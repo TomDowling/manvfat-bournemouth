@@ -12,6 +12,7 @@ import { Trophy, ArrowLeft, Plus, Trash2, Target, Users } from "lucide-react";
 import Link from "next/link";
 import { fixtures, teams, players, playerStats } from "@/lib/data";
 import { teamColorMap } from "@/lib/teamColorMap";
+import { cn } from "@/lib/utils";
 
 interface IPlayerCard {
     id: string;
@@ -31,7 +32,7 @@ export const PlayerCard: React.FC<IPlayerCard> = ({ id }) => {
     return (
         <Card key={player.id} className="relative hover:shadow-lg transition-shadow overflow-hidden">
             <div
-                className={`absolute transform rotate-45 ${teamColorClasses} text-center text-white font-semibold py-1 h-8 right-[-35px] top-[32px] w-[170px]`}>
+                className={cn(teamColorClasses, "absolute transform rotate-45 text-center text-white font-semibold py-1 h-8 right-[-35px] top-[32px] w-[170px]")}>
                 {player.isCaptain && <>Captain</>}
                 {player.isViceCaptain && <>Vice</>}
             </div>

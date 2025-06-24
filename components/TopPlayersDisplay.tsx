@@ -10,6 +10,7 @@ import { fixtures, teams, gameEvents, topGoalScorers, topAssists, topCleanSheets
 import { format } from "date-fns";
 import { teamColorMap } from "@/lib/teamColorMap";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 // @ts-ignore
 export const PlayerRow = ({ rank, name, team, value, isTop }) => {
@@ -84,7 +85,7 @@ export const TopPlayersDisplay: React.FC<TopPlayersDisplayProps> = ({ title, pla
                         return (
                             <div key={player.playerId}>
                                 {isTopSpot ? (
-                                    <div className={`${teamColorClasses} p-4 rounded-lg mb-4 flex items-center text-white`}>
+                                    <div className={cn(teamColorClasses, "p-4 rounded-lg mb-4 flex items-center text-white")}>
                                         <div className="flex-1">
                                             <div className="text-3xl font-bold">{player.playerName}</div>
                                             <div className="flex items-center gap-2">

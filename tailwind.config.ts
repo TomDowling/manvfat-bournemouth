@@ -92,5 +92,18 @@ const config: Config = {
   	}
   },
   plugins: [require("tailwindcss-animate")],
+  safelist: [
+        'bg-yellow-300',
+        'bg-purple-600',
+        'text-white',
+        'bg-black',
+        'bg-orange-500',
+        'bg-green-600',
+        'bg-gray-50',
+        'border',
+        'border-gray-200',
+        'bg-blue-600',
+        'bg-red-600',
+    ],
 };
 export default config;
