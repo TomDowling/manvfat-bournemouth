@@ -1,48 +1,62 @@
-import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabaseClient";
 import { IPlayer } from "@/lib/data";
+import { supabase } from "@/lib/supabaseClient";
+import { useEffect, useState } from "react";
 
-interface UsePlayersResult {
-    players: IPlayer[] | undefined;
+export interface UsePlayersResult {
+    player?: IPlayer;
+    players?: IPlayer[];
     loading: boolean;
     error: Error | null;
 }
 
-export const usePlayers = (teamId?: string): UsePlayersResult => {
+export const usePlayers = (id?: string): UsePlayersResult => {
+    const [player, setPlayer] = useState<IPlayer | undefined>(undefined);
     const [players, setPlayers] = useState<IPlayer[] | undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<Error | null>(null);
 
     useEffect(() => {
-        const fetchPlayers = async () => {
-            if (!teamId) {
-                setLoading(false);
-                setError(new Error("Team ID is undefined."));
-                return;
-            }
-
+        const fetchData = async () => {
             setLoading(true);
             setError(null);
 
             try {
-                const { data, error: supabaseError } = await supabase.from("players").select("*").eq("teamId", teamId);
+                if (id) {
+                    const { data, error: supabaseError } = await supabase.from("players").select("*").eq("id", id).single();
 
-                if (supabaseError) {
-                    throw supabaseError;
+                    if (supabaseError) {
+                        throw supabaseError;
+                    }
+
+                    if (!data) {
+                        setError(new Error("No player found with the given ID."));
+                        setPlayer(undefined);
+                    } else {
+                        setPlayer(data as IPlayer);
+                    }
+                    setPlayers(undefined);
+                } else {
+                    const { data, error: supabaseError } = await supabase.from("players").select("*");
+
+                    if (supabaseError) {
+                        throw supabaseError;
+                    }
+
+                    setPlayers(data as IPlayer[]);
+                    setPlayer(undefined);
                 }
-
-                setPlayers(data as IPlayer[]);
             } catch (err: any) {
                 console.error("Error fetching players:", err);
                 setError(err);
+                setPlayer(undefined);
                 setPlayers(undefined);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchPlayers();
-    }, [teamId]);
+        fetchData();
+    }, [id]);
 
-    return { players, loading, error };
+    return { player, players: players, loading, error };
 };

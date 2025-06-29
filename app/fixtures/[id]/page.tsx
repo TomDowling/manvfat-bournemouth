@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Trophy, Plus, Trash2, Target, Users } from "lucide-react";
 import { fixtures } from "@/lib/data";
 import { usePlayers, useTeams } from "@/hooks";
+import { useFixtures } from "@/hooks/useFixtures";
 
 interface Goal {
     id: string;
@@ -26,7 +27,7 @@ export default function FixturePage() {
     const fixtureId = params.id as string;
     const { teams } = useTeams();
     const { players } = usePlayers();
-    const fixture = fixtures.find((f) => f.id === fixtureId);
+    const { fixture } = useFixtures(fixtureId);
 
     const [homeScore, setHomeScore] = useState("0");
     const [awayScore, setAwayScore] = useState("0");
@@ -38,14 +39,14 @@ export default function FixturePage() {
         team: "home" as "home" | "away"
     });
 
-    if (!fixture) {
-        return <div>Fixture not found</div>;
-    }
+    // if (!fixture) {
+    //     return <div>Fixture not found</div>;
+    // }
 
-    const homeTeam = teams?.find((t) => t.id === fixture.homeTeamId)!;
-    const awayTeam = teams?.find((t) => t.id === fixture.awayTeamId)!;
-    const homePlayers = players?.filter((p) => p.teamId === fixture.homeTeamId) || [];
-    const awayPlayers = players?.filter((p) => p.teamId === fixture.awayTeamId) || [];
+    const homeTeam = teams?.find((t) => t.id === fixture?.homeTeamId)!;
+    const awayTeam = teams?.find((t) => t.id === fixture?.awayTeamId)!;
+    const homePlayers = players?.filter((p) => p.teamId === fixture?.homeTeamId) || [];
+    const awayPlayers = players?.filter((p) => p.teamId === fixture?.awayTeamId) || [];
 
     const addGoal = () => {
         if (!newGoal.scorer || !newGoal.minute) return;
@@ -111,7 +112,7 @@ export default function FixturePage() {
                     <div>
                         <h2 className="text-3xl font-bold text-gray-900">Match Details</h2>
                         <p className="text-gray-600">
-                            {fixture.gameweek} - {fixture.date}
+                            {fixture?.gameweek} - {fixture?.date}
                         </p>
                     </div>
                 </div>
@@ -128,7 +129,7 @@ export default function FixturePage() {
                         <CardContent className="space-y-6">
                             <div className="flex items-center justify-between">
                                 <div className="text-center space-y-2">
-                                    <div className="font-semibold text-lg">{homeTeam.name}</div>
+                                    <div className="font-semibold text-lg">{homeTeam?.name}</div>
                                     <Input
                                         type="number"
                                         value={homeScore}
@@ -140,7 +141,7 @@ export default function FixturePage() {
                                 </div>
                                 <div className="text-2xl font-bold text-gray-400">-</div>
                                 <div className="text-center space-y-2">
-                                    <div className="font-semibold text-lg">{awayTeam.name}</div>
+                                    <div className="font-semibold text-lg">{awayTeam?.name}</div>
                                     <Input
                                         type="number"
                                         value={awayScore}
@@ -170,17 +171,17 @@ export default function FixturePage() {
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <Label htmlFor="team">Team</Label>
-                                    <Select
+                                    {/* <Select
                                         value={newGoal.team}
                                         onValueChange={(value: "home" | "away") => setNewGoal({ ...newGoal, team: value })}>
                                         <SelectTrigger>
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="home">{homeTeam.name}</SelectItem>
-                                            <SelectItem value="away">{awayTeam.name}</SelectItem>
+                                            <SelectItem value="home">{homeTeam?.name}</SelectItem>
+                                            <SelectItem value="away">{awayTeam?.name}</SelectItem>
                                         </SelectContent>
-                                    </Select>
+                                    </Select> */}
                                 </div>
                                 <div>
                                     <Label htmlFor="minute">Minute</Label>
@@ -198,7 +199,7 @@ export default function FixturePage() {
 
                             <div>
                                 <Label htmlFor="scorer">Goalscorer</Label>
-                                <Select value={newGoal.scorer} onValueChange={(value) => setNewGoal({ ...newGoal, scorer: value })}>
+                                {/* <Select value={newGoal.scorer} onValueChange={(value) => setNewGoal({ ...newGoal, scorer: value })}>
                                     <SelectTrigger>
                                         <SelectValue placeholder="Select goalscorer" />
                                     </SelectTrigger>
@@ -209,12 +210,12 @@ export default function FixturePage() {
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
-                                </Select>
+                                </Select> */}
                             </div>
 
                             <div>
                                 <Label htmlFor="assister">Assister (Optional)</Label>
-                                <Select value={newGoal.assister} onValueChange={(value) => setNewGoal({ ...newGoal, assister: value })}>
+                                {/* <Select value={newGoal.assister} onValueChange={(value) => setNewGoal({ ...newGoal, assister: value })}>
                                     <SelectTrigger>
                                         <SelectValue placeholder="Select assister" />
                                     </SelectTrigger>
@@ -226,7 +227,7 @@ export default function FixturePage() {
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
-                                </Select>
+                                </Select> */}
                             </div>
 
                             <Button onClick={addGoal} className="w-full">

@@ -6,15 +6,19 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, Trophy, Plus } from "lucide-react";
 import Link from "next/link";
-import { fixtures, fixtureGoals } from "@/lib/data";
+import { fixtureGoals } from "@/lib/data";
 import { format } from "date-fns";
 import { useTeams } from "@/hooks";
+import { useFixtures } from "@/hooks/useFixtures";
 
 export default function Page() {
     const now = new Date();
-    const upcomingFixtures = fixtures.filter((f) => new Date(f.date) > now);
-    const completedFixtures = fixtures.filter((f) => new Date(f.date) <= now);
+    const { fixtures } = useFixtures();
+    const upcomingFixtures = fixtures?.filter((f) => new Date(f.date) > now);
+    const completedFixtures = fixtures?.filter((f) => new Date(f.date) <= now);
     const { teams } = useTeams();
+
+    console.log("fixtures", fixtures);
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
@@ -28,17 +32,17 @@ export default function Page() {
                     <TabsList className="grid w-full max-w-md grid-cols-2">
                         <TabsTrigger value="upcoming" className="flex items-center gap-2">
                             <Calendar className="h-4 w-4" />
-                            Upcoming ({upcomingFixtures.length})
+                            Upcoming ({upcomingFixtures?.length})
                         </TabsTrigger>
                         <TabsTrigger value="completed" className="flex items-center gap-2">
                             <Trophy className="h-4 w-4" />
-                            Completed ({completedFixtures.length})
+                            Completed ({completedFixtures?.length})
                         </TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="upcoming" className="space-y-4">
                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                            {upcomingFixtures.map((fixture) => (
+                            {upcomingFixtures?.map((fixture) => (
                                 <Card key={fixture.id} className="hover:shadow-lg transition-shadow">
                                     <CardHeader className="pb-3">
                                         <div className="flex justify-between items-start">
@@ -84,7 +88,7 @@ export default function Page() {
                     <TabsContent value="completed" className="space-y-4">
                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                             {completedFixtures
-                                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                                ?.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
                                 // .filter((fixture) => fixture.id === "f29")
                                 .map((fixture) => {
                                     const fixtureEvents = fixtureGoals(fixture);
@@ -117,7 +121,7 @@ export default function Page() {
                                                         <div className="text-3xl font-bold text-green-600">{fixtureEvents.away.goals}</div>
                                                     </div>
                                                 </div>
-                                                <Link href={`/fixture/${fixture.id}`}>
+                                                <Link href={`/fixtures/${fixture.id}`}>
                                                     <Button className="w-full" variant="outline" size="sm">
                                                         View Details
                                                     </Button>
