@@ -1,11 +1,19 @@
-export interface Team {
+export interface ITeam {
     id: string;
     name: string;
     color: string;
     isActive?: boolean;
 }
 
-export interface Player {
+export interface Goal {
+    id: string;
+    scorer: string;
+    assister?: string;
+    minute: number;
+    team: "home" | "away";
+}
+
+export interface IPlayer {
     id: string;
     name: string;
     teamId: string;
@@ -21,7 +29,7 @@ export interface Player {
 //     team: string;
 // }
 
-export interface Fixture {
+export interface IFixture {
     id: string;
     homeTeamId: string;
     awayTeamId: string;
@@ -30,25 +38,26 @@ export interface Fixture {
     season: number;
 }
 
-export interface GameEvent {
+export interface IGameEvent {
     id: string;
     fixtureId: string;
     eventType: "goal" | "assist" | "cleanSheet";
     playerId?: string;
 }
 
-export const teams: Team[] = [
-    { id: "t1", name: "Yellow Chubmarines", color: "yellow" },
-    { id: "t5", name: "FC Purpleona", color: "purple" },
-    { id: "t2", name: "Black Forest Fatsos", color: "black" },
-    { id: "t3", name: "Ivory Toast", color: "orange" },
-    { id: "t4", name: "The Incredible Bulk", color: "green" },
-    { id: "t6", name: "Paris Sandwichman", color: "white" },
-    { id: "t7", name: "Scoffenheim FC", color: "blue" },
-    { id: "t8", name: "Kebaberdeen", color: "red" }
+export const teams: ITeam[] = [
+    { isActive: true, id: "t1", name: "Yellow Chubmarines", color: "yellow" },
+    { isActive: true, id: "t5", name: "FC Purpleona", color: "purple" },
+    { isActive: true, id: "t2", name: "Black Forest Fatsos", color: "black" },
+    { isActive: true, id: "t3", name: "Ivory Toast", color: "orange" },
+    { isActive: true, id: "t4", name: "The Incredible Bulk", color: "green" },
+    { isActive: true, id: "t6", name: "Paris Sandwichman", color: "white" },
+    { isActive: true, id: "t7", name: "Scoffenheim FC", color: "blue" },
+    { isActive: true, id: "t8", name: "Kebaberdeen", color: "red" },
+    { isActive: false, id: "t0", name: "Unknown Team", color: "grey" }
 ];
 
-export const players: Player[] = [
+export const dummyPlayers: IPlayer[] = [
     { isActive: true, id: "p1", name: "Luke Cage", teamId: "t6", isCaptain: true },
     { isActive: true, id: "p2", name: "Charlie Rees", teamId: "t6" },
     { isActive: false, id: "p3", name: "Dawid Kiszka", teamId: "t6" },
@@ -142,84 +151,15 @@ export const players: Player[] = [
     { isActive: true, id: "p84", name: "Jim Lovell", teamId: "t4" },
     { isActive: true, id: "p85", name: "Sam Bailey", teamId: "t4" },
     { isActive: true, id: "p86", name: "Scott Hardy", teamId: "t4", isViceCaptain: true },
-    { isActive: true, id: "p87", name: "Tom Marks", teamId: "t4" }
+    { isActive: true, id: "p87", name: "Tom Marks", teamId: "t4" },
+
+    // New Players
+    { isActive: true, id: "p88", name: "Brett TBC", teamId: "t8" },
+    { isActive: true, id: "p89", name: "Dean TBC", teamId: "t4" },
+    { isActive: true, id: "p99", name: "Unknown Player", teamId: "t0" }
 ];
 
-// export const fixtures: Fixture[] = [
-//     {
-//         id: "f1",
-//         homeTeam: "t1",
-//         awayTeam: "t6",
-//         date: "2025-04-25T20:30:00",
-//         season: 13,
-//         gameweek: 1
-//     },
-//     {
-//         id: "f2",
-//         homeTeam: "t1",
-//         awayTeam: "t6",
-//         date: "2025-07-01T20:30:00",
-//         season: 13,
-//         gameweek: 2
-//     }
-// ];
-
-// export const gameEvents: GameEvent[] = [
-//     {
-//         id: "e1",
-//         gameId: "f1",
-//         eventType: "goal",
-//         isActive: true,
-//         playerId: "p7"
-//     },
-//     {
-//         id: "e2",
-//         gameId: "f1",
-//         eventType: "goal",
-//         isActive: true,
-//         playerId: "p17"
-//     },
-//     {
-//         id: "e3",
-//         gameId: "f1",
-//         eventType: "goal",
-//         isActive: true,
-//         playerId: "p9"
-//     },
-//     {
-//         id: "e4",
-//         gameId: "f1",
-//         eventType: "assist",
-//         isActive: true,
-//         playerId: "p7"
-//     }
-// ];
-
-// export function getPlayerById(id: string): Player | undefined {
-//     return players.find((p) => p.id === id);
-// }
-
-// export function getTeamById(id: string): Team | undefined {
-//     return teams.find((t) => t.id === id);
-// }
-
-// export function getPlayerTotalGoals(playerId: string): number {
-//     return gameEvents.filter((event) => event.eventType === "goal" && event.playerId === playerId).length;
-// }
-
-// export function getTeamTotalGoals(teamId: string): number {
-//     return gameEvents.filter((event) => event.eventType === "goal" && event.teamId === teamId).length;
-// }
-
-// export function getGameGoals(gameId: string): GameEvent[] {
-//     return gameEvents.filter((event) => event.eventType === "goal" && event.gameId === gameId);
-// }
-
-// export function getPlayerTotalAssists(playerId: string): number {
-//     return gameEvents.filter((event) => event.eventType === "assist" && event.playerId === playerId).length;
-// }
-
-export const fixtures: Fixture[] = [
+export const fixtures: IFixture[] = [
     { id: "f1", homeTeamId: "t3", awayTeamId: "t5", date: "2025-04-25T21:00:00", gameweek: 1, season: 13 },
     { id: "f2", homeTeamId: "t4", awayTeamId: "t8", date: "2025-04-25T21:00:00", gameweek: 1, season: 13 },
     { id: "f3", homeTeamId: "t2", awayTeamId: "t7", date: "2025-04-25T21:00:00", gameweek: 1, season: 13 },
@@ -278,221 +218,9 @@ export const fixtures: Fixture[] = [
     { id: "f56", homeTeamId: "t1", awayTeamId: "t7", date: "2025-07-25T21:00:00", gameweek: 14, season: 13 }
 ];
 
-export const gameEvents: GameEvent[] = [
-    { id: "ge1", fixtureId: "f1", eventType: "goal", playerId: "p16" },
-    { id: "ge2", fixtureId: "f1", eventType: "goal", playerId: "p16" },
-    { id: "ge3", fixtureId: "f1", eventType: "assist", playerId: "p12" },
-    { id: "ge4", fixtureId: "f1", eventType: "assist", playerId: "p18" },
-    { id: "ge5", fixtureId: "f1", eventType: "goal", playerId: "p34" },
-    { id: "ge6", fixtureId: "f1", eventType: "goal", playerId: "p34" },
-    { id: "ge7", fixtureId: "f1", eventType: "assist", playerId: "p37" },
-    { id: "ge8", fixtureId: "f1", eventType: "assist", playerId: "p35" },
-    { id: "ge9", fixtureId: "f2", eventType: "goal", playerId: "p84" },
-    { id: "ge10", fixtureId: "f2", eventType: "goal", playerId: "p86" },
-    { id: "ge11", fixtureId: "f2", eventType: "goal", playerId: "p86" },
-    { id: "ge12", fixtureId: "f2", eventType: "goal", playerId: "p85" },
-    { id: "ge13", fixtureId: "f2", eventType: "goal", playerId: "p79" },
-    { id: "ge14", fixtureId: "f2", eventType: "assist", playerId: "p86" },
-    { id: "ge15", fixtureId: "f2", eventType: "assist", playerId: "p86" },
-    { id: "ge16", fixtureId: "f2", eventType: "assist", playerId: "p81" },
-    { id: "ge17", fixtureId: "f2", eventType: "assist", playerId: "p77" },
-    { id: "ge18", fixtureId: "f2", eventType: "goal", playerId: "p51" },
-    { id: "ge19", fixtureId: "f3", eventType: "goal", playerId: "p69" },
-    { id: "ge20", fixtureId: "f3", eventType: "assist", playerId: "p71" },
-    { id: "ge21", fixtureId: "f3", eventType: "goal", playerId: "p30" },
-    { id: "ge22", fixtureId: "f3", eventType: "goal", playerId: "p28" },
-    { id: "ge23", fixtureId: "f3", eventType: "assist", playerId: "p30" },
-    { id: "ge24", fixtureId: "f3", eventType: "assist", playerId: "p26" },
-    { id: "ge25", fixtureId: "f4", eventType: "goal", playerId: "p59" },
-    { id: "ge26", fixtureId: "f4", eventType: "goal", playerId: "p62" },
-    { id: "ge27", fixtureId: "f4", eventType: "goal", playerId: "p64" },
-    { id: "ge28", fixtureId: "f4", eventType: "assist", playerId: "p57" },
-    { id: "ge29", fixtureId: "f4", eventType: "assist", playerId: "p58" },
-    { id: "ge30", fixtureId: "f4", eventType: "goal", playerId: "p11" },
-    { id: "ge31", fixtureId: "f4", eventType: "goal", playerId: "p11" },
-    { id: "ge32", fixtureId: "f5", eventType: "goal", playerId: "p17" },
-    { id: "ge33", fixtureId: "f5", eventType: "goal", playerId: "p18" },
-    { id: "ge34", fixtureId: "f5", eventType: "goal", playerId: "p12" },
-    { id: "ge35", fixtureId: "f5", eventType: "assist", playerId: "p20" },
-    { id: "ge36", fixtureId: "f5", eventType: "assist", playerId: "p20" },
-    { id: "ge37", fixtureId: "f6", eventType: "goal", playerId: "p34" },
-    { id: "ge38", fixtureId: "f6", eventType: "goal", playerId: "p34" },
-    { id: "ge39", fixtureId: "f6", eventType: "goal", playerId: "p34" },
-    { id: "ge40", fixtureId: "f6", eventType: "goal", playerId: "p38" },
-    { id: "ge41", fixtureId: "f6", eventType: "assist", playerId: "p35" },
-    { id: "ge42", fixtureId: "f6", eventType: "assist", playerId: "p35" },
-    { id: "ge43", fixtureId: "f6", eventType: "assist", playerId: "p35" },
-    { id: "ge44", fixtureId: "f6", eventType: "assist", playerId: "p36" },
-    { id: "ge45", fixtureId: "f6", eventType: "cleanSheet", playerId: "p43" },
-    { id: "ge46", fixtureId: "f7", eventType: "goal", playerId: "p30" },
-    { id: "ge47", fixtureId: "f7", eventType: "assist", playerId: "p23" },
-    { id: "ge48", fixtureId: "f7", eventType: "goal", playerId: "p84" },
-    { id: "ge49", fixtureId: "f8", eventType: "goal", playerId: "p76" },
-    { id: "ge50", fixtureId: "f8", eventType: "goal", playerId: "p69" },
-    { id: "ge51", fixtureId: "f8", eventType: "goal", playerId: "p71" },
-    { id: "ge52", fixtureId: "f8", eventType: "assist", playerId: "p76" },
-    { id: "ge53", fixtureId: "f8", eventType: "assist", playerId: "p69" },
-    { id: "ge54", fixtureId: "f8", eventType: "assist", playerId: "p71" },
-    { id: "ge55", fixtureId: "f8", eventType: "cleanSheet", playerId: "p67" },
-    { id: "ge56", fixtureId: "f9", eventType: "goal", playerId: "p69" },
-    { id: "ge57", fixtureId: "f9", eventType: "goal", playerId: "p71" },
-    { id: "ge58", fixtureId: "f9", eventType: "goal", playerId: "p71" },
-    { id: "ge59", fixtureId: "f9", eventType: "assist", playerId: "p69" },
-    { id: "ge60", fixtureId: "f9", eventType: "assist", playerId: "p76" },
-    { id: "ge61", fixtureId: "f9", eventType: "assist", playerId: "p76" },
-    { id: "ge62", fixtureId: "f9", eventType: "cleanSheet", playerId: "p74" },
-    { id: "ge63", fixtureId: "f10", eventType: "goal", playerId: "p84" },
-    { id: "ge64", fixtureId: "f10", eventType: "goal", playerId: "p84" },
-    { id: "ge65", fixtureId: "f10", eventType: "goal", playerId: "p84" },
-    { id: "ge66", fixtureId: "f10", eventType: "goal", playerId: "p86" },
-    { id: "ge67", fixtureId: "f10", eventType: "assist", playerId: "p83" },
-    { id: "ge68", fixtureId: "f10", eventType: "assist", playerId: "p86" },
-    { id: "ge69", fixtureId: "f10", eventType: "assist", playerId: "p86" },
-    { id: "ge70", fixtureId: "f10", eventType: "assist", playerId: "p78" },
-    { id: "ge71", fixtureId: "f10", eventType: "goal", playerId: "p59" },
-    { id: "ge72", fixtureId: "f10", eventType: "goal", playerId: "p59" },
-    { id: "ge73", fixtureId: "f10", eventType: "assist", playerId: "p55" },
-    { id: "ge74", fixtureId: "f11", eventType: "goal", playerId: "p12" },
-    { id: "ge75", fixtureId: "f11", eventType: "goal", playerId: "p12" },
-    { id: "ge76", fixtureId: "f11", eventType: "goal", playerId: "p18" },
-    { id: "ge77", fixtureId: "f11", eventType: "assist", playerId: "p18" },
-    { id: "ge78", fixtureId: "f11", eventType: "assist", playerId: "p17" },
-    { id: "ge79", fixtureId: "f11", eventType: "assist", playerId: "p16" },
-    { id: "ge80", fixtureId: "f11", eventType: "goal", playerId: "p30" },
-    { id: "ge81", fixtureId: "f12", eventType: "goal", playerId: "p34" },
-    { id: "ge82", fixtureId: "f12", eventType: "goal", playerId: "p34" },
-    { id: "ge83", fixtureId: "f12", eventType: "goal", playerId: "p34" },
-    { id: "ge84", fixtureId: "f12", eventType: "goal", playerId: "p35" },
-    { id: "ge85", fixtureId: "f12", eventType: "assist", playerId: "p36" },
-    { id: "ge86", fixtureId: "f12", eventType: "assist", playerId: "p35" },
-    { id: "ge87", fixtureId: "f12", eventType: "assist", playerId: "p44" },
-    { id: "ge88", fixtureId: "f12", eventType: "assist", playerId: "p43" },
-    { id: "ge89", fixtureId: "f13", eventType: "goal", playerId: "p30" },
-    { id: "ge90", fixtureId: "f14", eventType: "goal", playerId: "p51" },
-    { id: "ge91", fixtureId: "f15", eventType: "goal", playerId: "p19" },
-    { id: "ge92", fixtureId: "f15", eventType: "goal", playerId: "p12" },
-    { id: "ge93", fixtureId: "f15", eventType: "goal", playerId: "p18" },
-    { id: "ge94", fixtureId: "f15", eventType: "assist", playerId: "p22" },
-    { id: "ge95", fixtureId: "f15", eventType: "assist", playerId: "p12" },
-    { id: "ge96", fixtureId: "f15", eventType: "assist", playerId: "p20" },
-    { id: "ge97", fixtureId: "f15", eventType: "cleanSheet", playerId: "p20" },
-    { id: "ge98", fixtureId: "f17", eventType: "goal", playerId: "p84" },
-    { id: "ge99", fixtureId: "f17", eventType: "goal", playerId: "p84" },
-    { id: "ge100", fixtureId: "f17", eventType: "goal", playerId: "p78" },
-    { id: "ge101", fixtureId: "f17", eventType: "goal", playerId: "p78" },
-    { id: "ge102", fixtureId: "f17", eventType: "goal", playerId: "p81" },
-    { id: "ge103", fixtureId: "f17", eventType: "assist", playerId: "p77" },
-    { id: "ge104", fixtureId: "f17", eventType: "assist", playerId: "p84" },
-    { id: "ge105", fixtureId: "f17", eventType: "assist", playerId: "p79" },
-    { id: "ge106", fixtureId: "f18", eventType: "goal", playerId: "p12" },
-    { id: "ge107", fixtureId: "f18", eventType: "assist", playerId: "p17" },
-    { id: "ge108", fixtureId: "f18", eventType: "goal", playerId: "p69" },
-    { id: "ge109", fixtureId: "f19", eventType: "goal", playerId: "p34" },
-    { id: "ge110", fixtureId: "f19", eventType: "goal", playerId: "p34" },
-    { id: "ge111", fixtureId: "f19", eventType: "goal", playerId: "p34" },
-    { id: "ge112", fixtureId: "f19", eventType: "goal", playerId: "p38" },
-    { id: "ge113", fixtureId: "f19", eventType: "goal", playerId: "p38" },
-    { id: "ge114", fixtureId: "f19", eventType: "assist", playerId: "p36" },
-    { id: "ge115", fixtureId: "f19", eventType: "assist", playerId: "p36" },
-    { id: "ge116", fixtureId: "f19", eventType: "assist", playerId: "p42" },
-    { id: "ge117", fixtureId: "f19", eventType: "assist", playerId: "p42" },
-    { id: "ge118", fixtureId: "f19", eventType: "assist", playerId: "p42" },
-    { id: "ge119", fixtureId: "f19", eventType: "goal", playerId: "p59" },
-    { id: "ge120", fixtureId: "f19", eventType: "goal", playerId: "p59" },
-    { id: "ge121", fixtureId: "f19", eventType: "goal", playerId: "p57" },
-    { id: "ge122", fixtureId: "f19", eventType: "assist", playerId: "p59" },
-    { id: "ge123", fixtureId: "f19", eventType: "assist", playerId: "p55" },
-    { id: "ge124", fixtureId: "f20", eventType: "goal", playerId: "p30" },
-    { id: "ge125", fixtureId: "f20", eventType: "goal", playerId: "p30" },
-    { id: "ge126", fixtureId: "f20", eventType: "goal", playerId: "p30" },
-    { id: "ge127", fixtureId: "f20", eventType: "assist", playerId: "p26" },
-    { id: "ge128", fixtureId: "f20", eventType: "assist", playerId: "p32" },
-    { id: "ge129", fixtureId: "f20", eventType: "assist", playerId: "p27" },
-    { id: "ge130", fixtureId: "f20", eventType: "cleanSheet", playerId: "p25" },
-    { id: "ge131", fixtureId: "f21", eventType: "goal", playerId: "p59" },
-    { id: "ge132", fixtureId: "f21", eventType: "goal", playerId: "p64" },
-    { id: "ge133", fixtureId: "f21", eventType: "assist", playerId: "p57" },
-    { id: "ge134", fixtureId: "f21", eventType: "assist", playerId: "p55" },
-    { id: "ge135", fixtureId: "f21", eventType: "goal", playerId: "p51" },
-    { id: "ge136", fixtureId: "f21", eventType: "assist", playerId: "p48" },
-    { id: "ge137", fixtureId: "f22", eventType: "goal", playerId: "p5" },
-    { id: "ge138", fixtureId: "f22", eventType: "goal", playerId: "p2" },
-    { id: "ge139", fixtureId: "f23", eventType: "goal", playerId: "p40" },
-    { id: "ge140", fixtureId: "f23", eventType: "assist", playerId: "p38" },
-    { id: "ge141", fixtureId: "f23", eventType: "cleanSheet", playerId: "p43" },
-    { id: "ge142", fixtureId: "f24", eventType: "goal", playerId: "p78" },
-    { id: "ge143", fixtureId: "f24", eventType: "goal", playerId: "p86" },
-    { id: "ge144", fixtureId: "f24", eventType: "assist", playerId: "p86" },
-    { id: "ge145", fixtureId: "f24", eventType: "assist", playerId: "p83" },
-    { id: "ge146", fixtureId: "f24", eventType: "goal", playerId: "p12" },
-    { id: "ge147", fixtureId: "f24", eventType: "goal", playerId: "p12" },
-    { id: "ge148", fixtureId: "f24", eventType: "assist", playerId: "p17" },
-    { id: "ge149", fixtureId: "f24", eventType: "assist", playerId: "p37" },
-    { id: "ge150", fixtureId: "f25", eventType: "goal", playerId: "p18" },
-    { id: "ge151", fixtureId: "f25", eventType: "assist", playerId: "p15" },
-    { id: "ge152", fixtureId: "f25", eventType: "goal", playerId: "p5" },
-    { id: "ge153", fixtureId: "f26", eventType: "goal", playerId: "p38" },
-    { id: "ge154", fixtureId: "f26", eventType: "goal", playerId: "p38" },
-    { id: "ge155", fixtureId: "f26", eventType: "goal", playerId: "p36" },
-    { id: "ge156", fixtureId: "f26", eventType: "assist", playerId: "p34" },
-    { id: "ge157", fixtureId: "f26", eventType: "assist", playerId: "p34" },
-    { id: "ge158", fixtureId: "f26", eventType: "assist", playerId: "p35" },
-    { id: "ge159", fixtureId: "f26", eventType: "assist", playerId: "p35" },
-    { id: "ge160", fixtureId: "f26", eventType: "goal", playerId: "p77" },
-    { id: "ge161", fixtureId: "f27", eventType: "goal", playerId: "p73" },
-    { id: "ge162", fixtureId: "f27", eventType: "goal", playerId: "p69" },
-    { id: "ge163", fixtureId: "f27", eventType: "goal", playerId: "p66" },
-    { id: "ge164", fixtureId: "f28", eventType: "goal", playerId: "p23" },
-    { id: "ge165", fixtureId: "f28", eventType: "assist", playerId: "p30" },
-    { id: "ge166", fixtureId: "f28", eventType: "goal", playerId: "p59" },
-    { id: "ge167", fixtureId: "f28", eventType: "goal", playerId: "p59" },
-    { id: "ge168", fixtureId: "f28", eventType: "goal", playerId: "p59" },
-    { id: "ge169", fixtureId: "f28", eventType: "goal", playerId: "p57" },
-    { id: "ge170", fixtureId: "f28", eventType: "assist", playerId: "p55" },
-    { id: "ge171", fixtureId: "f28", eventType: "assist", playerId: "p55" },
-    { id: "ge172", fixtureId: "f28", eventType: "assist", playerId: "p55" },
-    { id: "ge173", fixtureId: "f28", eventType: "assist", playerId: "p57" },
+export const gameEvents: IGameEvent[] = [];
 
-    { id: "ge174", fixtureId: "f29", eventType: "goal", playerId: "p2" },
-    { id: "ge175", fixtureId: "f29", eventType: "goal", playerId: "p59" },
-    { id: "ge176", fixtureId: "f29", eventType: "goal", playerId: "p59" },
-    { id: "ge177", fixtureId: "f29", eventType: "goal", playerId: "p59" },
-    { id: "ge178", fixtureId: "f29", eventType: "goal", playerId: "p59" },
-    { id: "ge179", fixtureId: "f29", eventType: "goal", playerId: "p57" },
-    { id: "ge180", fixtureId: "f29", eventType: "goal", playerId: "p57" },
-    { id: "ge181", fixtureId: "f29", eventType: "goal", playerId: "p60" },
-    { id: "ge182", fixtureId: "f29", eventType: "goal", playerId: "p55" },
-    { id: "ge183", fixtureId: "f29", eventType: "assist", playerId: "p59" },
-    { id: "ge184", fixtureId: "f29", eventType: "assist", playerId: "p55" },
-    { id: "ge185", fixtureId: "f29", eventType: "assist", playerId: "p55" },
-    { id: "ge186", fixtureId: "f29", eventType: "assist", playerId: "p55" },
-    { id: "ge187", fixtureId: "f29", eventType: "assist", playerId: "p57" },
-    { id: "ge188", fixtureId: "f29", eventType: "assist", playerId: "p57" },
-    { id: "ge189", fixtureId: "f29", eventType: "assist", playerId: "p57" },
-    { id: "ge190", fixtureId: "f29", eventType: "assist", playerId: "p61" },
-
-    { id: "ge191", fixtureId: "f30", eventType: "goal", playerId: "p30" },
-    { id: "ge192", fixtureId: "f30", eventType: "goal", playerId: "p30" },
-    { id: "ge193", fixtureId: "f30", eventType: "goal", playerId: "p30" },
-    { id: "ge194", fixtureId: "f30", eventType: "assist", playerId: "p28" },
-    { id: "ge195", fixtureId: "f30", eventType: "assist", playerId: "p27" },
-    { id: "ge196", fixtureId: "f30", eventType: "assist", playerId: "p23" },
-    { id: "ge197", fixtureId: "f31", eventType: "goal", playerId: "p48" },
-    { id: "ge198", fixtureId: "f31", eventType: "goal", playerId: "p49" },
-    { id: "ge199", fixtureId: "f31", eventType: "assist", playerId: "p48" },
-    { id: "ge200", fixtureId: "f31", eventType: "assist", playerId: "p48" },
-    { id: "ge201", fixtureId: "f31", eventType: "assist", playerId: "p51" },
-    { id: "ge202", fixtureId: "f31", eventType: "assist", playerId: "p51" },
-    { id: "ge203", fixtureId: "f31", eventType: "goal", playerId: "p86" },
-    { id: "ge204", fixtureId: "f31", eventType: "goal", playerId: "p86" },
-    { id: "ge205", fixtureId: "f31", eventType: "goal", playerId: "p84" },
-    { id: "ge206", fixtureId: "f31", eventType: "assist", playerId: "p86" },
-    { id: "ge207", fixtureId: "f31", eventType: "assist", playerId: "p84" },
-    { id: "ge208", fixtureId: "f31", eventType: "assist", playerId: "p87" },
-    { id: "ge209", fixtureId: "f32", eventType: "cleanSheet", playerId: "p20" }
-];
-
-export const fixtureGoals = (fixture: Fixture) => {
+export const fixtureGoals = (fixture: IFixture) => {
     const events = gameEvents.filter((event) => event.fixtureId === fixture.id);
 
     let homeGoals = 0,
@@ -502,7 +230,7 @@ export const fixtureGoals = (fixture: Fixture) => {
 
     events.forEach((event) => {
         if (!event.playerId) return;
-        const player = players.find((p) => p.id === event.playerId);
+        const player = dummyPlayers.find((p) => p.id === event.playerId);
         if (!player) return;
 
         const isHomePlayer = player.teamId === fixture.homeTeamId;
@@ -546,7 +274,7 @@ const playerCleanSheets = (playerId: string) => {
 };
 
 export const playerStats = (playerId: string) => {
-    const player = players.find((p) => p.id === playerId);
+    const player = dummyPlayers.find((p) => p.id === playerId);
     if (!player) return null;
 
     const goals = playerGoals(playerId);
@@ -603,7 +331,7 @@ export const getPlayerStats = (sortByEventType: "goal" | "assist" | "cleanSheet"
     });
 
     const topPlayers: PlayerStats[] = Object.keys(playerStatsMap).map((playerId) => {
-        const player = players.find((p) => p.id === playerId);
+        const player = dummyPlayers.find((p) => p.id === playerId);
         if (!player) {
             console.warn(`Player with ID ${playerId} not found in players array.`);
             return {

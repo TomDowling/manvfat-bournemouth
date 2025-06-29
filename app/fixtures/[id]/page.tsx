@@ -8,9 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, ArrowLeft, Plus, Trash2, Target, Users } from "lucide-react";
-import Link from "next/link";
-import { fixtures, teams, players } from "@/lib/data";
+import { Trophy, Plus, Trash2, Target, Users } from "lucide-react";
+import { fixtures } from "@/lib/data";
+import { usePlayers, useTeams } from "@/hooks";
 
 interface Goal {
     id: string;
@@ -24,7 +24,8 @@ export default function FixturePage() {
     const params = useParams();
     const router = useRouter();
     const fixtureId = params.id as string;
-
+    const { teams } = useTeams();
+    const { players } = usePlayers();
     const fixture = fixtures.find((f) => f.id === fixtureId);
 
     const [homeScore, setHomeScore] = useState("0");
@@ -41,10 +42,10 @@ export default function FixturePage() {
         return <div>Fixture not found</div>;
     }
 
-    const homeTeam = teams.find((t) => t.id === fixture.homeTeam)!;
-    const awayTeam = teams.find((t) => t.id === fixture.awayTeam)!;
-    const homePlayers = players.filter((p) => p.teamId === fixture.homeTeam);
-    const awayPlayers = players.filter((p) => p.teamId === fixture.awayTeam);
+    const homeTeam = teams?.find((t) => t.id === fixture.homeTeamId)!;
+    const awayTeam = teams?.find((t) => t.id === fixture.awayTeamId)!;
+    const homePlayers = players?.filter((p) => p.teamId === fixture.homeTeamId) || [];
+    const awayPlayers = players?.filter((p) => p.teamId === fixture.awayTeamId) || [];
 
     const addGoal = () => {
         if (!newGoal.scorer || !newGoal.minute) return;
@@ -204,7 +205,7 @@ export default function FixturePage() {
                                     <SelectContent>
                                         {currentTeamPlayers.map((player) => (
                                             <SelectItem key={player.id} value={player.id}>
-                                                {player.name} (#{player.number})
+                                                {player.name}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
@@ -221,7 +222,7 @@ export default function FixturePage() {
                                         <SelectItem value="">No assist</SelectItem>
                                         {currentTeamPlayers.map((player) => (
                                             <SelectItem key={player.id} value={player.id}>
-                                                {player.name} (#{player.number})
+                                                {player.name}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>

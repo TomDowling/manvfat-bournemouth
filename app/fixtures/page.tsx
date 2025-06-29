@@ -1,17 +1,20 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Trophy, Users, Plus } from "lucide-react";
+import { Calendar, Trophy, Plus } from "lucide-react";
 import Link from "next/link";
-import { fixtures, teams, gameEvents, fixtureGoals } from "@/lib/data";
+import { fixtures, fixtureGoals } from "@/lib/data";
 import { format } from "date-fns";
+import { useTeams } from "@/hooks";
 
 export default function Page() {
     const now = new Date();
     const upcomingFixtures = fixtures.filter((f) => new Date(f.date) > now);
     const completedFixtures = fixtures.filter((f) => new Date(f.date) <= now);
+    const { teams } = useTeams();
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
@@ -51,14 +54,14 @@ export default function Page() {
                                         <div className="flex items-center justify-between mb-4">
                                             <div className="text-center">
                                                 <div className="font-semibold text-lg">
-                                                    {teams.find((t) => t.id === fixture.homeTeamId)?.name}
+                                                    {teams?.find((t) => t.id === fixture.homeTeamId)?.name}
                                                 </div>
                                                 <div className="text-sm text-gray-500">Home</div>
                                             </div>
                                             <div className="text-2xl font-bold text-gray-400">VS</div>
                                             <div className="text-center">
                                                 <div className="font-semibold text-lg">
-                                                    {teams.find((t) => t.id === fixture.awayTeamId)?.name}
+                                                    {teams?.find((t) => t.id === fixture.awayTeamId)?.name}
                                                 </div>
                                                 <div className="text-sm text-gray-500">Away</div>
                                             </div>
@@ -102,14 +105,14 @@ export default function Page() {
                                                 <div className="flex items-center justify-between mb-4">
                                                     <div className="text-center">
                                                         <div className="font-semibold text-lg">
-                                                            {teams.find((t) => t.id === fixture.homeTeamId)?.name}
+                                                            {teams?.find((t) => t.id === fixture.homeTeamId)?.name}
                                                         </div>
                                                         <div className="text-3xl font-bold text-green-600">{fixtureEvents.home.goals}</div>
                                                     </div>
                                                     <div className="text-lg font-bold text-gray-400">-</div>
                                                     <div className="text-center">
                                                         <div className="font-semibold text-lg">
-                                                            {teams.find((t) => t.id === fixture.awayTeamId)?.name}
+                                                            {teams?.find((t) => t.id === fixture.awayTeamId)?.name}
                                                         </div>
                                                         <div className="text-3xl font-bold text-green-600">{fixtureEvents.away.goals}</div>
                                                     </div>

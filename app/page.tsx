@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, Trophy, Users, Plus } from "lucide-react";
 import Link from "next/link";
-import { fixtures, teams, gameEvents, topGoalScorers, topAssists, topCleanSheets, PlayerStats } from "@/lib/data";
+import { fixtures, topGoalScorers, topAssists, topCleanSheets } from "@/lib/data";
 import { format } from "date-fns";
 import { teamColorMap } from "@/lib/teamColorMap";
 import { TopPlayersDisplay } from "@/components/TopPlayersDisplay";

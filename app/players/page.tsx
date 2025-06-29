@@ -1,23 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Trophy, Search, ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { teams, players, playerStats } from "@/lib/data";
-import { teamColorMap } from "@/lib/teamColorMap";
+import { Search } from "lucide-react";
 import { PlayerCard } from "@/components/PlayerCard";
+import { usePlayers, useTeams } from "@/hooks";
 
 export default function PlayersPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedTeam, setSelectedTeam] = useState("all");
+    const { teams } = useTeams();
+    const { players } = usePlayers();
 
     const filteredPlayers = players
-        .filter((player) => player.isActive)
+        ?.filter((player) => player.isActive)
         .filter((player) => {
             const matchesSearch = player.name.toLowerCase().includes(searchTerm.toLowerCase());
             const matchesTeam = selectedTeam === "all" || player.teamId === selectedTeam;
@@ -51,7 +48,7 @@ export default function PlayersPage() {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="all">All Teams</SelectItem>
-                            {teams.map((team) => (
+                            {teams?.map((team) => (
                                 <SelectItem key={team.id} value={team.id}>
                                     {team.name}
                                 </SelectItem>
@@ -61,12 +58,12 @@ export default function PlayersPage() {
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {filteredPlayers.map((player) => (
-                        <PlayerCard key={player.id} id={player.id} />
+                    {filteredPlayers?.map((player) => (
+                        <PlayerCard key={player.id} player={player} />
                     ))}
                 </div>
 
-                {filteredPlayers.length === 0 && (
+                {filteredPlayers?.length === 0 && (
                     <div className="text-center py-12">
                         <p className="text-gray-500">No players found matching your criteria.</p>
                     </div>

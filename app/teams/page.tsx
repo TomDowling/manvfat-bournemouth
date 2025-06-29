@@ -1,13 +1,35 @@
-"use client";
+// "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Trophy, Users, ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { teams, players } from "@/lib/data";
+import { IPlayer, ITeam } from "@/lib/data";
+import { createClient } from "@/lib/supabase";
 
-export default function TeamsPage() {
+const getTeams = async (): Promise<ITeam[]> => {
+    const supabase = await createClient();
+    const { data: teams, error } = await supabase.from("teams").select("*").eq("isActive", true);
+
+    return teams || [];
+};
+
+const getPlayers = async (): Promise<IPlayer[]> => {
+    const supabase = await createClient();
+    const { data: players, error } = await supabase.from("players").select("*").eq("isActive", true);
+
+    return players || [];
+};
+
+export default async function TeamsPage() {
+    const teams = await getTeams();
+    const players = await getPlayers();
+
+    if (!teams) {
+        return <></>;
+    }
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

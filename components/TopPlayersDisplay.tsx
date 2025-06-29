@@ -1,16 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Trophy, Users, Plus } from "lucide-react";
-import Link from "next/link";
-import { fixtures, teams, gameEvents, topGoalScorers, topAssists, topCleanSheets, PlayerStats } from "@/lib/data";
-import { format } from "date-fns";
+import { PlayerStats } from "@/lib/data";
 import { teamColorMap } from "@/lib/teamColorMap";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useTeams } from "@/hooks";
 
 // @ts-ignore
 export const PlayerRow = ({ rank, name, team, value, isTop }) => {
@@ -36,6 +30,7 @@ interface TopPlayersDisplayProps {
 }
 
 export const TopPlayersDisplay: React.FC<TopPlayersDisplayProps> = ({ title, players, statKey }) => {
+    const { teams } = useTeams();
     const [showFullList, setShowFullList] = useState(false);
 
     const getTruncatedList = () => {
@@ -77,7 +72,7 @@ export const TopPlayersDisplay: React.FC<TopPlayersDisplayProps> = ({ title, pla
                         const firstPlayerWithSameValueIndex = players.findIndex((p) => p[statKey] === player[statKey]);
                         rankToDisplay = firstPlayerWithSameValueIndex + 1;
 
-                        const team = teams.find((t) => t.name === player.teamName);
+                        const team = teams?.find((t) => t.name === player.teamName);
                         const teamColorClasses = team ? teamColorMap[team.color.toLowerCase()] || "" : "";
 
                         const isTopSpot = rankToDisplay === 1;
